@@ -11,14 +11,20 @@ resources:
   - repository: Web # In a different organization
     type: git
     name: TrainingProject/Web
+  - repository: MyGitHubRepo
+    type: github
+    endpoint: Github2 #Service connection
+    name: JeaustinRodriguez/Checkout-task
+    ref: main
 
 pool:
   vmImage: windows-latest
 
 steps:
 - checkout: Web
-- checkout: self #Repo where the pipeline is created
-- script: dir $(Build.SourcesDirectory) #Bouth repositories in $(System.DefaultWorkingDirectory)
+- checkout: self
+- checkout: MyGitHubRepo
+- script: dir $(Build.SourcesDirectory)
 
 - task: CopyFiles@2 # Copy the files from the repo Web to the Folder1
   inputs:
