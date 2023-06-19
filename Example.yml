@@ -17,8 +17,8 @@ pool:
 
 steps:
 - checkout: Web
-- checkout: self
-- script: dir $(Build.SourcesDirectory)
+- checkout: self #Repo where the pipeline is created
+- script: dir $(Build.SourcesDirectory) #Bouth repositories in $(System.DefaultWorkingDirectory)
 
 - task: CopyFiles@2 # Copy the files from the repo Web to the Folder1
   inputs:
