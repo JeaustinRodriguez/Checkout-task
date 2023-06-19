@@ -1,0 +1,50 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- master
+
+resources:
+  repositories:
+  - repository: Web # In a different organization
+    type: git
+    name: TrainingProject/Web
+
+pool:
+  vmImage: windows-latest
+
+steps:
+- checkout: Web
+- checkout: self
+- script: dir $(Build.SourcesDirectory)
+
+- task: CopyFiles@2 # Copy the files from the repo Web to the Folder1
+  inputs:
+    SourceFolder: '$(System.DefaultWorkingDirectory)/Web'
+    Contents: '**'
+    TargetFolder: '$(System.DefaultWorkingDirectory)/Folder1'
+    OverWrite: true
+  
+- task: CopyFiles@2 # Copy the files from the repo Wiki to the Folder1
+  inputs:
+    SourceFolder: '$(System.DefaultWorkingDirectory)/Wiki'
+    Contents: '**'
+    TargetFolder: '$(System.DefaultWorkingDirectory)/Folder1'
+    OverWrite: true
+
+- task: DeleteFiles@1 #Delete the folder Web
+  inputs:
+    SourceFolder: '$(System.DefaultWorkingDirectory)'
+    Contents: 'Web'
+
+- task: DeleteFiles@1 #Delete the folder Wiki
+  inputs:
+    SourceFolder: '$(System.DefaultWorkingDirectory)'
+    Contents: 'Wiki'
+
+- task: PowerShell@2 #Print the result
+  inputs:
+    targetType: 'inline'
+    script: 'Get-ChildItem'
